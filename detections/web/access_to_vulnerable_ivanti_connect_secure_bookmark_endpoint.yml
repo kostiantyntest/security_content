@@ -2,19 +2,12 @@ name: Access to Vulnerable Ivanti Connect Secure Bookmark Endpoint
 id: 15838756-f425-43fa-9d88-a7f88063e81a
 version: 4
 date: '2024-11-15'
-author: Michael Haag, Splunk
+author: Test
 status: production
 type: TTP
 data_source:
 - Suricata
-description: The following analytic identifies access to the 
-  /api/v1/configuration/users/user-roles/user-role/rest-userrole1/web/web-bookmarks/bookmark
-  endpoint, which is associated with CVE-2023-46805 and CVE-2024-21887 vulnerabilities.
-  It detects this activity by monitoring for GET requests that receive a 403 Forbidden
-  response with an empty body. This behavior is significant as it indicates potential
-  exploitation attempts against Ivanti Connect Secure systems. If confirmed malicious,
-  attackers could exploit these vulnerabilities to gain unauthorized access or control
-  over the affected systems, leading to potential data breaches or system compromise.
+description: The following 
 search: '| tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Web
   where Web.url="*/api/v1/configuration/users/user-roles/user-role/rest-userrole1/web/web-bookmarks/bookmark*"
   Web.http_method=GET Web.status=403 by Web.src, Web.dest, Web.http_user_agent, Web.status,
@@ -29,8 +22,6 @@ known_false_positives: This analytic is limited to HTTP Status 403; adjust as ne
   to better fit the specific environment.
 references:
 - https://github.com/RootUp/PersonalStuff/blob/master/http-vuln-cve2023-46805_2024_21887.nse
-- https://github.com/projectdiscovery/nuclei-templates/blob/c6b351e71b0fb0e40e222e97038f1fe09ac58194/http/misconfiguration/ivanti/CVE-2023-46085-CVE-2024-21887-mitigation-not-applied.yaml
-- https://github.com/rapid7/metasploit-framework/pull/18708/files
 drilldown_searches:
 - name: View the detection results for - "$dest$"
   search: '%original_detection_search% | search  dest = "$dest$"'
